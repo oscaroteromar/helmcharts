@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  peladochart:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-02-09T18:33:09.768853+01:00"
+    description: A Helm chart for Kubernetes
+    digest: 47b42d2198d745f6de1f8ab3593f92e7f80b1ad21d4bed73644ee91655897421
+    name: peladochart
+    type: application
+    urls:
+    - charts/peladochart-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-02-09T18:33:09.766609+01:00"
