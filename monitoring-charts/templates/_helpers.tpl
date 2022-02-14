@@ -1,3 +1,5 @@
+{{/* *** PROMETHEUS *** */}}
+
 {{/*
 ClusterRole metrics endpoint
 */}}
@@ -72,7 +74,7 @@ Deployment containers volume
 {{- end -}}
 
 {{/*
-NOTES
+Notes
 */}}
 
 {{- define "notes.svc.type" -}}
@@ -85,4 +87,62 @@ ClusterIP
 
 {{- define "notes.pod.filter" -}}
 {{ toYaml .Values.prometheus.label | toString | replace ": " "=" | quote }}
+{{- end -}}
+
+{{/* *** KUBE-STATE-METRICS *** */}}
+
+{{/*
+Common labels
+*/}}
+{{- define "kubesm.labels" -}}
+{{ toYaml .Values.kubeStateMetrics.labels }}
+{{- end -}}
+
+{{/*
+Deployment selector.matchLables
+*/}}
+{{- define "kubesm.deploy.selector.matchLabels" -}}
+{{ toYaml .Values.kubeStateMetrics.deployment.matchLabels }}
+{{- end -}}
+
+{{/*
+Deployment liveness
+*/}}
+{{- define "kubesm.deploy.liveness" -}}
+{{ toYaml .Values.kubeStateMetrics.deployment.containers.livenessProbe }}
+{{- end -}}
+
+{{/*
+Deployment readiness
+*/}}
+{{- define "kubesm.deploy.readiness" -}}
+{{ toYaml .Values.kubeStateMetrics.deployment.containers.readinessProbe }}
+{{- end -}}
+
+{{/*
+Deployment ports
+*/}}
+{{- define "kubesm.deploy.ports" -}}
+{{ toYaml .Values.kubeStateMetrics.deployment.containers.ports }}
+{{- end -}}
+
+{{/*
+Deployment nodeSelector
+*/}}
+{{- define "kubesm.deploy.nodeselector" -}}
+{{ toYaml .Values.kubeStateMetrics.deployment.nodeSelector }}
+{{- end -}}
+
+{{/*
+Service ports
+*/}}
+{{- define "kubesm.svc.ports" -}}
+{{ toYaml .Values.kubeStateMetrics.service.ports }}
+{{- end -}}
+
+{{/*
+Service selector
+*/}}
+{{- define "kubesm.svc.selector" -}}
+{{ toYaml .Values.kubeStateMetrics.service.selector }}
 {{- end -}}

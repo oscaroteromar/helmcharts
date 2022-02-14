@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: {{ include "kubesm.labels" . | nindent 4 }}
+  name: {{ .Values.kubeStateMetrics.name }}
+  namespace: {{ .Values.kubeStateMetrics.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{ include "kubesm.deploy.selector.matchLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "kubesm.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - image: {{ .Values.kubeStateMetrics.deployment.containers.image }}
+        name: {{ .Values.kubeStateMetrics.name }}
+        livenessProbe: {{ include "kubesm.deploy.liveness" . | nindent 10 }}
+        readinessProbe: {{ include "kubesm.deploy.readiness" . | nindent 10 }}
+        ports: {{ include "kubesm.deploy.ports" . | nindent 8 }}
+      nodeSelector: {{ include "kubesm.deploy.nodeselector" . | nindent 8 }}
+      serviceAccountName: {{ .Values.kubeStateMetrics.name }}

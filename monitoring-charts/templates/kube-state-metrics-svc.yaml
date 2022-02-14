@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels: {{ include "kubesm.labels" . | nindent 4 }}
+  name: {{ .Values.kubeStateMetrics.name }}
+  namespace: {{ .Values.kubeStateMetrics.namespace }}
+spec:
+  clusterIP: None
+  ports: {{ include "kubesm.svc.ports" . | nindent 2 }}
+  selector: {{ include "kubesm.svc.selector" . | nindent 4 }}
