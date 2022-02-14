@@ -1,0 +1,21 @@
+{{- $ns := .Values.namespace  -}}
+You have intalled a beta version of monitoring with prometheus.
+Please, run these commands (better in a new console window) to get the prometheus dashboard url:
+{{- $svc_type := include "notes.svc.type" . -}}
+{{- if eq $svc_type "NodePort" }}
+export NODE_EXTERNAL_IP=$(kubectl -n {{ $ns }} get node -o jsonpath="{.items[0].status.addresses[?(@.type=='ExternalIP')].address}")
+export SVC_PORT=$(kubectl -n {{ $ns }} get svc {{ .Values.prometheus.service.name }} -o jsonpath="{.spec.ports[0].nodePort}")
+echo "Visit: http://$NODE_EXTERNAL_IP:$SVC_PORT"
+{{ end }}
+{{- if eq $svc_type "LoadBalancer" }}
+export SVC_EXTERNAL_IP=$(kubectl -n {{ $ns }} get svc {{ .Values.prometheus.service.name }} -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+export SVC_PORT=$(kubectl -n {{ $ns }} get svc {{ .Values.prometheus.service.name }} -o jsonpath="{.spec.ports[0].port}")
+You may need to wait a bit until the IP is set by kubernetes.
+echo "Visit: http://$SVC_EXTERNAL_IP:$SVC_PORT"
+{{- end }}
+{{- if eq $svc_type "ClusterIP" }}
+export POD_NAME=$(kubectl -n {{ $ns }} get pod -l {{ include "notes.pod.filter" . }} -o jsonpath="{.items[0].metadata.name}")
+export CONTAINER_PORT=$(kubectl -n {{ $ns }} get pod -l {{ include "notes.pod.filter" . }} -o jsonpath="{.items[0].spec.containers[0].ports[0].containerPort}")
+kubectl --namespace {{ $ns }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+{{- end }}
+

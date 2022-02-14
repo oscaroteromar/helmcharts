@@ -1,0 +1,11 @@
+{{ $prometheus := .Values.prometheus  }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.prometheus.service.name }}
+  namespace: {{ .Values.namespace }}
+  annotations: {{ include "prometheus.svc.annotations" . | nindent 4 }}
+spec:
+  selector: {{  toYaml .Values.prometheus.label | nindent 4 }}
+  ports: {{ include "prometheus.svc.ports" . | nindent 4 }}
+  {{ include "prometheus.svc.type" . }}

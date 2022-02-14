@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.prometheus.deployment.name }}
+  namespace: {{ .Values.namespace }}
+  labels: {{ toYaml .Values.prometheus.label | nindent 4 }}
+spec:
+  replicas: {{ .Values.prometheus.deployment.replicas }}
+  selector:
+    matchLabels: {{ toYaml .Values.prometheus.label | nindent 6 }}
+  template:
+    metadata:
+      labels: {{  toYaml .Values.prometheus.label | nindent 8 }}
+    spec:
+      containers: {{ include "prometheus.deploy.containers" . | nindent 8 }}
+      volumes: {{ include "prometheus.deploy.volumes" . | nindent 8 }}
