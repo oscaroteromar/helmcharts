@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.nodeExporter.name }}
+  namespace: {{ .Values.namespace }}
+  annotations: {{ include "svc.annotations" .Values.nodeExporter | nindent 4 }}
+spec:
+  type: {{ .Values.nodeExporter.service.type }}
+  selector: {{ include "nexp.labels" . | nindent 4 }}
+  ports: {{ include "nexp.svc.ports" . | nindent 4 }}

@@ -1,3 +1,14 @@
+{{/* *** COMMON *** */}}
+
+{{/*
+Service annotations
+*/}}
+{{- define "svc.annotations" -}}
+prometheus.io/scrape: "true"
+prometheus.io/port: {{ .deployment.containers.port | quote }}
+{{- end -}}
+
+
 {{/* *** PROMETHEUS *** */}}
 
 {{/*
@@ -15,13 +26,6 @@ ConfigMap prometheus configuration
 {{- .Files.Get .Values.prometheus.configMap.filename | nindent 4 -}}
 {{- end -}}
 
-{{/*
-Service annotations
-*/}}
-{{- define "prometheus.svc.annotations" -}}
-prometheus.io/scrape: "true"
-prometheus.io/port: {{ .Values.prometheus.deployment.containers.port | quote }}
-{{- end -}}
 
 {{/*
 Service type
@@ -145,4 +149,76 @@ Service selector
 */}}
 {{- define "kubesm.svc.selector" -}}
 {{ toYaml .Values.kubeStateMetrics.service.selector }}
+{{- end -}}
+
+{{/* *** NODE-EXPORTER *** */}}
+
+{{/*
+Common labels
+*/}}
+{{- define "nexp.labels" -}}
+{{ toYaml .Values.nodeExporter.labels }}
+{{- end -}}
+
+{{/*
+Service ports
+*/}}
+{{- define "nexp.svc.ports" -}}
+- name: {{ .Values.nodeExporter.name }}
+  protocol: TCP
+  port: {{ .Values.nodeExporter.service.port | default .Values.nodeExporter.deployment.containers.port }}
+  targetPort: {{ .Values.nodeExporter.deployment.containers.port }}
+  {{ if .Values.nodeExporter.service.nodePort -}}
+  nodePort: {{ .Values.nodeExporter.service.nodePort }}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Daemonset args
+*/}}
+{{- define "nexp.ds.args" -}}
+{{- with (index .Values.nodeExporter.deployment.containers.volumeMounts 0) -}}
+- --path.sysfs={{ .mountPath}}
+{{- end -}}
+{{- with (index .Values.nodeExporter.deployment.containers.volumeMounts 1) }}
+- --path.rootfs={{ .mountPath}}
+{{- end }}
+- --no-collector.wifi
+- --no-collector.hwmon
+- --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)
+- --collector.netclass.ignored-devices=^(veth.*)$
+{{- end -}}
+
+{{/*
+Daemonset ports
+*/}}
+{{- define "nexp.ds.ports" -}}
+- containerPort: {{ .Values.nodeExporter.deployment.containers.port }}
+  protocol: TCP
+{{- end -}}
+
+{{/*
+Daemonset resources
+*/}}
+{{- define "nexp.ds.resources" -}}
+limits:
+  cpu: 250m
+  memory: 180Mi
+requests:
+  cpu: 102m
+  memory: 180Mi
+{{- end -}}
+
+{{/*
+Daemonset volumeMounts
+*/}}
+{{- define "nexp.ds.volumemounts" -}}
+{{ toYaml .Values.nodeExporter.deployment.containers.volumeMounts }}
+{{- end -}}
+
+{{/*
+Daemonset volumes
+*/}}
+{{- define "nexp.ds.volumes" -}}
+{{ toYaml .Values.nodeExporter.deployment.volumes }}
 {{- end -}}

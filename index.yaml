@@ -2,8 +2,18 @@ apiVersion: v1
 entries:
   monitoring-charts:
   - apiVersion: v2
+    appVersion: 1.18.0
+    created: "2022-02-15T13:10:00.295384+01:00"
+    description: A Helm chart for Kubernetes, now with kube-state-metrics and node-exporter.
+    digest: cbd1ada3e582697cac408970ed3c25c52c1feb81fa75b9283b25b17b0c3db1e9
+    name: monitoring-charts
+    type: application
+    urls:
+    - charts/monitoring-charts-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     appVersion: 1.17.0
-    created: "2022-02-14T20:26:14.676914+01:00"
+    created: "2022-02-15T13:10:00.294599+01:00"
     description: A Helm chart for Kubernetes, now with kube-state-metrics.
     digest: ac0867256e82ffd463bd28ca3b3a0d1595ef3965dfa8219b4f5c15939e9e09ce
     name: monitoring-charts
@@ -13,7 +23,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-02-14T20:26:14.675673+01:00"
+    created: "2022-02-15T13:10:00.291832+01:00"
     description: A Helm chart for Kubernetes
     digest: 92c939ad5437a527d566c4b51ded4c3aed444b5df2147a904c3d01e7dad9a119
     name: monitoring-charts
@@ -21,4 +31,4 @@ entries:
     urls:
     - charts/monitoring-charts-0.1.0.tgz
     version: 0.1.0
-generated: "2022-02-14T20:26:14.674024+01:00"
+generated: "2022-02-15T13:10:00.290432+01:00"

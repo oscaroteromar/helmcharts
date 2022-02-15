@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ .Values.nodeExporter.name }}
+  namespace: {{ .Values.namespace }}
+  labels: {{ include "nexp.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels: {{ include "nexp.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "nexp.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - args: {{ include "nexp.ds.args" . | nindent 12 }}
+          name: {{ .Values.nodeExporter.name }}
+          image: {{ .Values.nodeExporter.deployment.containers.image }}
+          ports: {{ include "nexp.ds.ports" . | nindent 12 }}
+          resources: {{ include "nexp.ds.resources" . | nindent 12 }}
+          volumeMounts: {{ include "nexp.ds.volumemounts" . | nindent 12 }}
+      volumes: {{ include "nexp.ds.volumes" . | nindent 8 }}
